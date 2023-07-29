@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayerCLassifier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #c25757;
+            text-align: center;
+        }
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        .image-preview {
+            max-width: 100%;
+            max-height: 300px;
+            margin: 20px 0;
+        }
+        .close-icon {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Football Player Classification</h2>
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" id="imageInput" name="image" accept="image/*" style="display: none;" required>
+            <label for="imageInput">
+                <img src="#" alt="Upload an image" id="imagePreview"  class="image-preview" style="display: none;">
+                <span id="uploadText">Choose an image</span>
+            </label>
+            <span id="closeIcon" class="close-icon" style="display: none;">&times;</span>
+            <input type="submit" value="Submit">
+        </form>
+        {% if predicted_class and confidence %}
+        <p>Predicted class is {{predicted_class}}, with confidence level {{confidence}}</p>
+
+        {% endif %}
+
+        {% if ex_msg %}
+        <p>{{ex_msg}}</p>
+        {% endif %}
+    </div>
+
+    <script>
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const uploadText = document.getElementById('uploadText');
+        const closeIcon = document.getElementById('closeIcon');
+        const imageForm = document.getElementById('imageForm');
+
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                imagePreview.src = e.target.result;
+                imagePreview.style.display = 'block';
+                uploadText.style.display = 'none';
+                closeIcon.style.display = 'block';
+            }
+
+            reader.readAsDataURL(file);
+        });
+
+        closeIcon.addEventListener('click', function() {
+            imageInput.value = '';
+            imagePreview.src = '#';
+            imagePreview.style.display = 'none';
+            uploadText.style.display = 'block';
+            closeIcon.style.display = 'none';
+        });
+
+        // imageForm.addEventListener('submit', function(e) {
+        //     e.preventDefault();
+        //     // You can perform additional actions here before submitting the form
+           
+        // });
+    </script>
+</body>
+</html>
